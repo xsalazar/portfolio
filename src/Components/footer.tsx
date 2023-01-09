@@ -25,7 +25,7 @@ export default class Footer extends React.Component {
             </Tooltip>
             <Tooltip title="Source Code">
               <Link
-                href="https://github.com/xsalazar/project-template"
+                href="https://github.com/xsalazar/portfolio"
                 color="textPrimary"
                 aria-label="Source Code"
                 target="_blank"
