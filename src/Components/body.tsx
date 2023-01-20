@@ -87,6 +87,7 @@ export default class Body extends React.Component<
                     src={imageURL}
                     style={{ objectFit: "cover" }}
                     height={256}
+                    alt="description"
                   />
                 </ImageListItem>
               );
@@ -108,7 +109,7 @@ export default class Body extends React.Component<
                 p: 4,
               }}
             >
-              <img width="100%" src={selectedImage} />
+              <img width="100%" src={selectedImage} alt="description" />
             </Box>
           </Modal>
         </Container>
