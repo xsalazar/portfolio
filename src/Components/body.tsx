@@ -6,6 +6,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,24 +35,13 @@ export default class Body extends React.Component<
     this.closeModal = this.closeModal.bind(this);
   }
 
-  componentDidMount(): void {
+  async componentDidMount(): Promise<void> {
+    const result = await axios.get(`https://backend.xsalazar.com/`, {
+      params: { allImages: true },
+    });
+
     this.setState({
-      imageURLs: [
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-        `https://upload.wikimedia.org/wikipedia/commons/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg`,
-      ],
+      imageURLs: result.data.images,
     });
   }
 
@@ -76,15 +66,16 @@ export default class Body extends React.Component<
           <Typography variant="caption" sx={{ marginRight: "auto" }}>
             Digital and film photography
           </Typography>
-          <ImageList cols={3} gap={16} rowHeight={256} sx={{ height: "100%" }}>
+          <ImageList cols={3} gap={16} sx={{ height: "100%" }}>
             {imageURLs.map((imageURL: string) => {
               return (
                 <ImageListItem
                   onClick={() => this.openModal(imageURL)}
                   key={uuidv4()}
+                  sx={{ aspectRatio: "1" }}
                 >
                   <img
-                    src={imageURL}
+                    src={`https://backend.xsalazar.com/?image=${imageURL}&thumbnail=true`}
                     style={{ objectFit: "cover" }}
                     height={256}
                     alt="description"
@@ -104,12 +95,15 @@ export default class Body extends React.Component<
                 transform: "translate(-50%, -50%)",
                 width: "70%",
                 bgcolor: "background.paper",
-                border: "2px solid #000",
                 boxShadow: 24,
-                p: 4,
+                p: 2,
               }}
             >
-              <img width="100%" src={selectedImage} alt="description" />
+              <img
+                width="100%"
+                src={`https://backend.xsalazar.com/?image=${selectedImage}`}
+                alt="description"
+              />
             </Box>
           </Modal>
         </Container>
