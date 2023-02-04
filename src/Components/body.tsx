@@ -1,5 +1,4 @@
 import {
-  Box,
   Container,
   ImageList,
   ImageListItem,
@@ -51,7 +50,7 @@ export default class Body extends React.Component<
     return (
       <div style={{ height: "calc(100vh - 200px)" }}>
         <Container
-          maxWidth="sm"
+          maxWidth="md"
           sx={{
             alignItems: "center",
             display: "flex",
@@ -66,7 +65,7 @@ export default class Body extends React.Component<
           <Typography variant="caption" sx={{ marginRight: "auto" }}>
             Digital and film photography
           </Typography>
-          <ImageList cols={3} gap={16} sx={{ height: "100%" }}>
+          <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
             {imageURLs.map((imageURL: string) => {
               return (
                 <ImageListItem
@@ -75,7 +74,7 @@ export default class Body extends React.Component<
                   sx={{ aspectRatio: "1" }}
                 >
                   <img
-                    src={`https://backend.xsalazar.com/?image=${imageURL}&thumbnail=true`}
+                    src={`https://backend.xsalazar.com/?image=${imageURL}`}
                     style={{ objectFit: "cover" }}
                     height={256}
                     alt="description"
@@ -87,13 +86,13 @@ export default class Body extends React.Component<
 
           {/* Modal */}
           <Modal open={isModalOpen} onClose={this.closeModal}>
-            <Box
+            <Container
+              maxWidth="lg"
               sx={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "70%",
                 bgcolor: "background.paper",
                 boxShadow: 24,
                 p: 2,
@@ -103,8 +102,9 @@ export default class Body extends React.Component<
                 width="100%"
                 src={`https://backend.xsalazar.com/?image=${selectedImage}`}
                 alt="description"
+                style={{ verticalAlign: "middle" }}
               />
-            </Box>
+            </Container>
           </Modal>
         </Container>
       </div>
