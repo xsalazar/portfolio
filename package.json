@@ -5,7 +5,7 @@
   "homepage": "/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@emotion/styled": "^11.10.6",
     "@mui/material": "^5.11.9",
     "@mui/icons-material": "^5.11.9",
     "@primer/octicons-react": "^17.12.0",
