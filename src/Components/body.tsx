@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 interface PortfolioProps {}
 
 interface PortfolioState {
-  imageURLs: Array<string>;
+  imageData: Array<{ id: string; order: number }>;
   isModalOpen: boolean;
   selectedImage: string;
 }
@@ -25,7 +25,7 @@ export default class Body extends React.Component<
     super(props);
 
     this.state = {
-      imageURLs: [],
+      imageData: [],
       isModalOpen: false,
       selectedImage: "",
     };
@@ -35,17 +35,19 @@ export default class Body extends React.Component<
   }
 
   async componentDidMount(): Promise<void> {
-    const result = await axios.get(`https://backend.xsalazar.com/`, {
-      params: { allImages: true },
-    });
+    const result = (
+      await axios.get(`https://backend.xsalazar.com/`, {
+        params: { allImages: true },
+      })
+    ).data;
 
     this.setState({
-      imageURLs: result.data.images,
+      imageData: result.data,
     });
   }
 
   render() {
-    const { imageURLs, isModalOpen, selectedImage } = this.state;
+    const { imageData, isModalOpen, selectedImage } = this.state;
 
     return (
       <div style={{ height: "calc(100vh - 200px)" }}>
@@ -66,15 +68,15 @@ export default class Body extends React.Component<
             Digital and film photography
           </Typography>
           <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
-            {imageURLs.map((imageURL: string) => {
+            {imageData.map(({ id }) => {
               return (
                 <ImageListItem
-                  onClick={() => this.openModal(imageURL)}
+                  onClick={() => this.openModal(id)}
                   key={uuidv4()}
                   sx={{ aspectRatio: "1" }}
                 >
                   <img
-                    src={`https://backend.xsalazar.com/?image=${imageURL}`}
+                    src={`https://backend.xsalazar.com/?image=${id}`}
                     style={{ objectFit: "cover" }}
                     height={256}
                     alt="description"
