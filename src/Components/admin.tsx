@@ -27,7 +27,7 @@ interface AdminProps {}
 interface AdminState {
   apiKey: string;
   hasError: boolean;
-  imageData: Array<{ id: string; order: number }>;
+  imageData: Array<{ id: string; order: number; isDeleted: boolean }>;
   isSaving: boolean;
   isUploading: boolean;
   showApiKey: boolean;
@@ -39,7 +39,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
 
     this.state = {
       apiKey: "",
-      hasError: true,
+      hasError: false,
       imageData: [],
       isSaving: false,
       isUploading: false,
@@ -63,7 +63,9 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     ).data;
 
     this.setState({
-      imageData: result.data,
+      imageData: result.data.map((x: { id: string; order: number }) => {
+        return { ...x, isDeleted: false };
+      }),
     });
   }
 
@@ -137,12 +139,12 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             </LoadingButton>
           </Stack>
           <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
-            {imageData.map(({ id, order }) => {
+            {imageData.map(({ id, order, isDeleted }) => {
               return (
                 <ImageListItem key={uuidv4()} sx={{ aspectRatio: "1" }}>
                   <img
                     src={`https://backend.xsalazar.com/?image=${id}`}
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "cover", opacity: isDeleted ? 0.6 : 1 }}
                     height={256}
                     alt="description"
                   />
@@ -164,7 +166,11 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
                           <ChevronDownIcon />
                         </IconButton>
                         <IconButton
-                          sx={{ color: "rgba(255, 255, 255, 0.54)" }}
+                          sx={{
+                            color: isDeleted
+                              ? "rgba(255, 50, 0, 0.54)"
+                              : "rgba(255, 255, 255, 0.54)",
+                          }}
                           onClick={() => this.handleDeleteImage(id)}
                         >
                           <TrashIcon />
@@ -246,15 +252,21 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     this.setState({ isSaving: true });
 
     try {
-      await axios.patch(
-        `https://backend.xsalazar.com/`,
-        { data: imageData },
-        {
-          params: { token: apiKey, updateImageData: true },
-        }
-      );
+      const res = (
+        await axios.patch(
+          `https://backend.xsalazar.com/`,
+          {
+            data: imageData.filter((x) => {
+              return !x.isDeleted;
+            }),
+          },
+          {
+            params: { token: apiKey, updateImageData: true },
+          }
+        )
+      ).data;
 
-      this.setState({ isSaving: false });
+      this.setState({ isSaving: false, imageData: res.data });
     } catch (e) {
       this.setState({ hasError: true, isSaving: false });
     }
@@ -286,8 +298,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
       ({ id: haystackId }) => needleId === haystackId
     );
 
-    // Remove object
-    imageData.splice(position, 1);
+    // Toggle deleted state
+    imageData[position].isDeleted = !imageData[position].isDeleted;
 
     this.setState({ imageData: this.normalizeImageOrder(imageData) });
   }
@@ -299,7 +311,9 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     });
   }
 
-  private normalizeImageOrder(data: Array<{ id: string; order: number }>) {
+  private normalizeImageOrder(
+    data: Array<{ id: string; order: number; isDeleted: boolean }>
+  ) {
     for (var i = 0; i < data.length; i++) {
       data[i].order = i;
     }
