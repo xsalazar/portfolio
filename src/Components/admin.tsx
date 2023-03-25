@@ -111,6 +111,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
               <input
                 accept="image/*"
                 hidden
+                multiple
                 id="contained-button-upload"
                 onChange={this.handleUploadImage}
                 type="file"
@@ -225,17 +226,23 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
       isUploading: true,
     });
 
+    const files = event.currentTarget.files;
+
     try {
-      const result = (
-        await axios.put(
-          `https://backend.xsalazar.com/`,
-          event.currentTarget.files[0],
-          { params: { token: apiKey } }
-        )
-      ).data;
+      for (var i = 0; i < files.length; i++) {
+        const file = files[i];
+        const result = (
+          await axios.put(`https://backend.xsalazar.com/`, file, {
+            params: { token: apiKey },
+          })
+        ).data;
+
+        this.setState({
+          imageData: result.data,
+        });
+      }
 
       this.setState({
-        imageData: result.data,
         isUploading: false,
       });
     } catch (e) {
