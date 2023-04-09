@@ -76,6 +76,7 @@ export default class Body extends React.Component<
                   sx={{ aspectRatio: "1" }}
                 >
                   <img
+                    loading="lazy"
                     src={`https://backend.xsalazar.com/?image=${id}`}
                     style={{ objectFit: "cover" }}
                     height={256}
