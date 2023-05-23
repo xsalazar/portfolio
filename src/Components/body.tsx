@@ -77,7 +77,7 @@ export default class Body extends React.Component<
                 >
                   <img
                     loading="lazy"
-                    src={`https://backend.xsalazar.com/?image=${id}`}
+                    src={`https://backend.xsalazar.com/images/${id}`}
                     style={{ objectFit: "cover" }}
                     height={256}
                     alt="description"
@@ -103,7 +103,7 @@ export default class Body extends React.Component<
             >
               <img
                 width="100%"
-                src={`https://backend.xsalazar.com/?image=${selectedImage}`}
+                src={`https://backend.xsalazar.com/images/${selectedImage}`}
                 alt="description"
                 style={{ verticalAlign: "middle" }}
               />
