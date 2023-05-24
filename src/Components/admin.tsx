@@ -145,7 +145,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
                 <ImageListItem key={uuidv4()} sx={{ aspectRatio: "1" }}>
                   <img
                     loading="lazy"
-                    src={`https://backend.xsalazar.com/image/${id}`}
+                    src={`https://backend.xsalazar.com/images/${id}`}
                     style={{ objectFit: "cover", opacity: isDeleted ? 0.6 : 1 }}
                     height={256}
                     alt="description"
