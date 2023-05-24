@@ -86,6 +86,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             height: "100%",
           }}
         >
+          {/* Top-level admin controls */}
           <Stack
             direction="row"
             justifyContent="flex-start"
@@ -93,6 +94,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             spacing={2}
             width="100%"
           >
+            {/* API Key */}
             <InputLabel>API Key</InputLabel>
             <Input
               size="small"
@@ -107,6 +109,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
                 </InputAdornment>
               }
             />
+
+            {/* Upload Button */}
             <label htmlFor="contained-button-upload">
               <input
                 accept="image/*"
@@ -128,6 +132,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
                 Upload Image
               </LoadingButton>
             </label>
+
+            {/* Save Button */}
             <LoadingButton
               disabled={!hasApiKey}
               startIcon={<Save />}
@@ -139,6 +145,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
               Save Changes
             </LoadingButton>
           </Stack>
+
+          {/* Images */}
           <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
             {imageData.map(({ id, order, isDeleted }) => {
               return (
