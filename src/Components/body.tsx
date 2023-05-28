@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { Container, ImageList, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
+import { imageListItemClasses } from "@mui/material/ImageListItem";
 import axios from "axios";
 import React from "react";
 import PortfolioImage from "./image";
@@ -55,17 +56,37 @@ export default class Body extends React.Component<
           <Typography variant="caption" sx={{ marginRight: "auto" }}>
             Digital and film photography
           </Typography>
-          <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
-            {imageData.map(({ id }) => {
-              return (
-                <PortfolioImage
-                  originalImageId={id}
-                  imageData={imageData}
-                  key={uuidv4()}
-                />
-              );
-            })}
-          </ImageList>
+          <Box
+            sx={{
+              mt: 2,
+              height: "calc(100vh - 250px)",
+              overflowY: "auto",
+              justifyItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "repeat(1, 1fr)",
+                  sm: "repeat(3, 1fr)",
+                },
+                [`& .${imageListItemClasses.root}`]: {
+                  display: "flex",
+                },
+              }}
+            >
+              {imageData.map(({ id }) => {
+                return (
+                  <PortfolioImage
+                    originalImageId={id}
+                    imageData={imageData}
+                    key={uuidv4()}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
         </Container>
       </div>
     );

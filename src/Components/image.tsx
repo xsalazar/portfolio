@@ -31,6 +31,7 @@ export default class PortfolioImage extends React.Component<
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleMove = this.handleMove.bind(this);
+    this.handleKeyDownMove = this.handleKeyDownMove.bind(this);
   }
 
   render() {
@@ -44,10 +45,9 @@ export default class PortfolioImage extends React.Component<
         <ImageListItem
           onClick={this.openModal}
           key={uuidv4()}
-          sx={{ aspectRatio: "1" }}
+          sx={{ aspectRatio: "1", p: 1 }}
         >
           <img
-            loading="lazy"
             src={`https://backend.xsalazar.com/images/${originalImageId}`} // We always want this to be the original image
             style={{ objectFit: "cover" }}
             height={256}
@@ -56,9 +56,12 @@ export default class PortfolioImage extends React.Component<
         </ImageListItem>
 
         {/* Modal */}
-        <Modal open={isModalOpen} onClose={this.closeModal}>
+        <Modal
+          open={isModalOpen}
+          onClose={this.closeModal}
+          onKeyDown={(event) => this.handleKeyDownMove(event, imageId)}
+        >
           <Container
-            maxWidth="lg"
             sx={{
               position: "absolute",
               top: "50%",
@@ -73,8 +76,8 @@ export default class PortfolioImage extends React.Component<
               direction="row"
               justifyContent="flex-start"
               alignItems="center"
+              useFlexGap
               spacing={2}
-              width="100%"
             >
               <IconButton
                 onClick={() => this.handleMove(imageId, false)}
@@ -83,7 +86,7 @@ export default class PortfolioImage extends React.Component<
                 <ArrowBack />
               </IconButton>
               <img
-                width="100%"
+                width="90.5%"
                 src={`https://backend.xsalazar.com/images/${imageId}`}
                 alt="description"
                 style={{ verticalAlign: "middle" }}
@@ -124,6 +127,20 @@ export default class PortfolioImage extends React.Component<
     this.setState({
       imageId: newImage.id,
     });
+  }
+
+  handleKeyDownMove(event: React.KeyboardEvent, imageId: string) {
+    let { imageData } = this.props;
+
+    const currentImagePosition = this.getImageIdPosition(imageId, imageData);
+    if (event.key === "ArrowLeft" && currentImagePosition !== 0) {
+      this.handleMove(imageId, false);
+    } else if (
+      event.key === "ArrowRight" &&
+      currentImagePosition !== imageData.length - 1
+    ) {
+      this.handleMove(imageId, true);
+    }
   }
 
   private getImageIdPosition(
