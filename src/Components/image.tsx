@@ -43,7 +43,7 @@ export default class PortfolioImage extends React.Component<
     return (
       <div>
         <ImageListItem
-          onClick={this.openModal}
+          onClick={() => (window.innerWidth >= 600 ? this.openModal() : null)}
           key={uuidv4()}
           sx={{ aspectRatio: "1", p: 1 }}
         >
