@@ -6,6 +6,7 @@ import {
   Stack,
   IconButton,
   Typography,
+  Backdrop,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
@@ -19,7 +20,8 @@ interface PortfolioImageProps {
 interface PortfolioImageState {
   description: string;
   imageId: string;
-  isModalOpen: boolean;
+  isDesktopModalOpen: boolean;
+  isMobileModalOpen: boolean;
 }
 
 export default class PortfolioImage extends React.Component<
@@ -32,30 +34,53 @@ export default class PortfolioImage extends React.Component<
     this.state = {
       description: props.originalDescription,
       imageId: props.originalImageId,
-      isModalOpen: false,
+      isDesktopModalOpen: false,
+      isMobileModalOpen: false,
     };
 
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.openDesktopModal = this.openDesktopModal.bind(this);
+    this.closeDesktopModal = this.closeDesktopModal.bind(this);
+    this.openMobileModal = this.openMobileModal.bind(this);
+    this.closeMobileModal = this.closeMobileModal.bind(this);
     this.handleMove = this.handleMove.bind(this);
     this.handleKeyDownMove = this.handleKeyDownMove.bind(this);
   }
 
   render() {
     const { imageData, originalImageId } = this.props;
-    const { description, imageId, isModalOpen } = this.state;
+    const { description, imageId, isDesktopModalOpen, isMobileModalOpen } =
+      this.state;
 
     const imagePosition = this.getImageIdPosition(imageId, imageData);
     const isMobile = window.innerWidth < 600; // Primitive, but it works for what I need
+    const hasDescription = description !== "";
 
     return (
       <div>
         <ImageListItem
-          onClick={() => (isMobile ? null : this.openModal())} // Don't open the modal on mobile since it looks horrible
           key={uuidv4()}
-          sx={{ aspectRatio: "1", p: 1 }}
+          sx={{ aspectRatio: "1", p: 1, position: "relative" }}
         >
+          <Backdrop
+            sx={{
+              m: 1,
+              position: "absolute",
+              color: "#fff",
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+            open={isMobileModalOpen}
+            onClick={this.closeMobileModal}
+          >
+            <Typography variant="caption">{description}</Typography>
+          </Backdrop>
           <img
+            onClick={() =>
+              isMobile
+                ? hasDescription
+                  ? this.openMobileModal()
+                  : null
+                : this.openDesktopModal()
+            }
             src={`https://backend.xsalazar.com/images/${originalImageId}`} // We always want this to be the original image
             style={{ objectFit: "cover" }}
             height={256}
@@ -63,10 +88,10 @@ export default class PortfolioImage extends React.Component<
           />
         </ImageListItem>
 
-        {/* Modal */}
+        {/* Desktop Modal */}
         <Modal
-          open={isModalOpen}
-          onClose={this.closeModal}
+          open={isDesktopModalOpen}
+          onClose={this.closeDesktopModal}
           onKeyDown={(event) => this.handleKeyDownMove(event, imageId)}
         >
           <Container
@@ -122,17 +147,25 @@ export default class PortfolioImage extends React.Component<
     );
   }
 
-  openModal() {
+  openDesktopModal() {
     this.setState({
-      isModalOpen: true,
+      isDesktopModalOpen: true,
     });
   }
 
-  closeModal() {
+  closeDesktopModal() {
     this.setState({
       imageId: this.props.originalImageId, // Reset the modal to "forget" if we navigated away
-      isModalOpen: false,
+      isDesktopModalOpen: false,
     });
+  }
+
+  openMobileModal() {
+    this.setState({ isMobileModalOpen: true });
+  }
+
+  closeMobileModal() {
+    this.setState({ isMobileModalOpen: false });
   }
 
   handleMove(imageId: string, forward: boolean) {
