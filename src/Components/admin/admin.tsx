@@ -2,8 +2,6 @@ import {
   Container,
   IconButton,
   ImageList,
-  ImageListItem,
-  ImageListItemBar,
   Input,
   InputAdornment,
   InputLabel,
@@ -13,21 +11,22 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  TrashIcon,
-  UploadIcon,
-} from "@primer/octicons-react";
+import { UploadIcon } from "@primer/octicons-react";
 import { Stack } from "@mui/system";
 import { Close, Save, Visibility, VisibilityOff } from "@mui/icons-material";
+import AdminImage from "./image";
 
 interface AdminProps {}
 
 interface AdminState {
   apiKey: string;
   hasError: boolean;
-  imageData: Array<{ id: string; order: number; isDeleted: boolean }>;
+  imageData: Array<{
+    description: string;
+    id: string;
+    isDeleted: boolean;
+    order: number;
+  }>;
   isSaving: boolean;
   isUploading: boolean;
   showApiKey: boolean;
@@ -48,6 +47,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
 
     this.handleApiKeyInput = this.handleApiKeyInput.bind(this);
     this.handleShowApiKey = this.handleShowApiKey.bind(this);
+    this.handleUpdateImageDescription =
+      this.handleUpdateImageDescription.bind(this);
     this.handleMoveImage = this.handleMoveImage.bind(this);
     this.handleDeleteImage = this.handleDeleteImage.bind(this);
     this.handleUploadImage = this.handleUploadImage.bind(this);
@@ -63,9 +64,11 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     ).data;
 
     this.setState({
-      imageData: result.data.map((x: { id: string; order: number }) => {
-        return { ...x, isDeleted: false };
-      }),
+      imageData: result.data.map(
+        (x: { id: string; order: number; description: string }) => {
+          return { ...x, isDeleted: false, description: x.description ?? "" };
+        }
+      ),
     });
   }
 
@@ -148,47 +151,21 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
 
           {/* Images */}
           <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
-            {imageData.map(({ id, order, isDeleted }) => {
+            {imageData.map(({ description, id, isDeleted, order }) => {
               return (
-                <ImageListItem key={uuidv4()} sx={{ aspectRatio: "1" }}>
-                  <img
-                    loading="lazy"
-                    src={`https://backend.xsalazar.com/images/${id}`}
-                    style={{ objectFit: "cover", opacity: isDeleted ? 0.6 : 1 }}
-                    height={256}
-                    alt="description"
-                  />
-                  <ImageListItemBar
-                    actionIcon={
-                      <div>
-                        <IconButton
-                          sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                          disabled={order === 0}
-                          onClick={() => this.handleMoveImage(id, false)}
-                        >
-                          <ChevronUpIcon />
-                        </IconButton>
-                        <IconButton
-                          sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                          disabled={order === imageData.length - 1}
-                          onClick={() => this.handleMoveImage(id, true)}
-                        >
-                          <ChevronDownIcon />
-                        </IconButton>
-                        <IconButton
-                          sx={{
-                            color: isDeleted
-                              ? "rgba(255, 50, 0, 0.54)"
-                              : "rgba(255, 255, 255, 0.54)",
-                          }}
-                          onClick={() => this.handleDeleteImage(id)}
-                        >
-                          <TrashIcon />
-                        </IconButton>
-                      </div>
-                    }
-                  />
-                </ImageListItem>
+                <AdminImage
+                  originalDescription={description}
+                  handleDeleteImage={this.handleDeleteImage}
+                  handleMoveImage={this.handleMoveImage}
+                  handleUpdateImageDescription={
+                    this.handleUpdateImageDescription
+                  }
+                  key={uuidv4()}
+                  id={id}
+                  imageData={imageData}
+                  isDeleted={isDeleted}
+                  order={order}
+                />
               );
             })}
           </ImageList>
@@ -288,6 +265,18 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     }
   }
 
+  handleUpdateImageDescription(needleId: string, description: string) {
+    let { imageData } = this.state;
+
+    const imagePosition = imageData.findIndex(
+      ({ id: haystackId }) => needleId === haystackId
+    );
+
+    imageData[imagePosition].description = description;
+
+    this.setState({ imageData: imageData });
+  }
+
   handleMoveImage(needleId: string, down: boolean) {
     let { imageData } = this.state;
 
@@ -328,7 +317,12 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
   }
 
   private normalizeImageOrder(
-    data: Array<{ id: string; order: number; isDeleted: boolean }>
+    data: Array<{
+      description: string;
+      id: string;
+      isDeleted: boolean;
+      order: number;
+    }>
   ) {
     for (var i = 0; i < data.length; i++) {
       data[i].order = i;

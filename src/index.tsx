@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import App from "./app";
-import Admin from "./Components/admin";
+import Admin from "./Components/admin/admin";
 
 const router = createHashRouter([
   {
