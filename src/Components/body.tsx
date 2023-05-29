@@ -8,7 +8,7 @@ import PortfolioImage from "./image";
 interface PortfolioProps {}
 
 interface PortfolioState {
-  imageData: Array<{ id: string; order: number }>;
+  imageData: Array<{ id: string; order: number; description: string }>;
 }
 
 export default class Body extends React.Component<
@@ -76,10 +76,11 @@ export default class Body extends React.Component<
                 },
               }}
             >
-              {imageData.map(({ id }) => {
+              {imageData.map(({ id, description }) => {
                 return (
                   <PortfolioImage
                     originalImageId={id}
+                    originalDescription={description}
                     imageData={imageData}
                     key={uuidv4()}
                   />

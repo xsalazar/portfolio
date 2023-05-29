@@ -5,16 +5,19 @@ import {
   Container,
   Stack,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 interface PortfolioImageProps {
+  imageData: Array<{ id: string; order: number; description: string }>;
+  originalDescription: string;
   originalImageId: string;
-  imageData: Array<{ id: string; order: number }>;
 }
 
 interface PortfolioImageState {
+  description: string;
   imageId: string;
   isModalOpen: boolean;
 }
@@ -26,7 +29,11 @@ export default class PortfolioImage extends React.Component<
   constructor(props: PortfolioImageProps) {
     super(props);
 
-    this.state = { imageId: props.originalImageId, isModalOpen: false };
+    this.state = {
+      description: props.originalDescription,
+      imageId: props.originalImageId,
+      isModalOpen: false,
+    };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -36,14 +43,15 @@ export default class PortfolioImage extends React.Component<
 
   render() {
     const { imageData, originalImageId } = this.props;
-    const { imageId, isModalOpen } = this.state;
+    const { description, imageId, isModalOpen } = this.state;
 
     const imagePosition = this.getImageIdPosition(imageId, imageData);
+    const isMobile = window.innerWidth < 600; // Primitive, but it works for what I need
 
     return (
       <div>
         <ImageListItem
-          onClick={() => (window.innerWidth >= 600 ? this.openModal() : null)}
+          onClick={() => (isMobile ? null : this.openModal())} // Don't open the modal on mobile since it looks horrible
           key={uuidv4()}
           sx={{ aspectRatio: "1", p: 1 }}
         >
@@ -74,23 +82,33 @@ export default class PortfolioImage extends React.Component<
           >
             <Stack
               direction="row"
-              justifyContent="flex-start"
+              justifyContent="center"
               alignItems="center"
-              useFlexGap
               spacing={2}
             >
+              {/* Back button */}
               <IconButton
                 onClick={() => this.handleMove(imageId, false)}
                 disabled={imagePosition === 0}
               >
                 <ArrowBack />
               </IconButton>
-              <img
-                width="90.5%"
-                src={`https://backend.xsalazar.com/images/${imageId}`}
-                alt="description"
-                style={{ verticalAlign: "middle" }}
-              />
+              {/* Image and description */}
+              <Stack
+                direction="column"
+                justifyContent="center"
+                alignContent="center"
+                spacing={2}
+              >
+                <img
+                  width="100%"
+                  src={`https://backend.xsalazar.com/images/${imageId}`}
+                  alt="description"
+                  style={{ verticalAlign: "middle" }}
+                />
+                <Typography variant="caption">{description}</Typography>
+              </Stack>
+              {/* Forward button */}
               <IconButton
                 onClick={() => this.handleMove(imageId, true)}
                 disabled={imagePosition === imageData.length - 1}
@@ -125,6 +143,7 @@ export default class PortfolioImage extends React.Component<
     const newImage = this.findImageAtPosition(newImagePosition, imageData);
 
     this.setState({
+      description: newImage.description,
       imageId: newImage.id,
     });
   }
@@ -153,8 +172,9 @@ export default class PortfolioImage extends React.Component<
 
   private findImageAtPosition(
     needlePosition: number,
-    imageData: Array<{ id: string; order: number }>
+    imageData: Array<{ id: string; order: number; description: string }>
   ): {
+    description: string;
     id: string;
     order: number;
   } {
