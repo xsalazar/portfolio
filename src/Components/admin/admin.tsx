@@ -277,20 +277,22 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     this.setState({ imageData: imageData });
   }
 
-  handleMoveImage(needleId: string, down: boolean) {
+  handleMoveImage(needleId: string, down: boolean, count?: number) {
     let { imageData } = this.state;
+
+    const jump = count ?? 1;
 
     const oldPosition = imageData.findIndex(
       ({ id: haystackId }) => needleId === haystackId
     );
 
-    const newPosition = oldPosition + (down ? 1 : -1);
+    const newPosition = oldPosition + (down ? jump : -1 * jump);
 
-    // Swap images
-    [imageData[oldPosition], imageData[newPosition]] = [
-      imageData[newPosition],
-      imageData[oldPosition],
-    ];
+    const originalData = imageData[oldPosition];
+
+    // Move image
+    imageData.splice(oldPosition, 1);
+    imageData.splice(newPosition, 0, originalData);
 
     // Normalize order and save state
     this.setState({ imageData: this.normalizeImageOrder(imageData) });

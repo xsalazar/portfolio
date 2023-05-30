@@ -1,4 +1,11 @@
-import { Notes } from "@mui/icons-material";
+import {
+  Comment,
+  KeyboardDoubleArrowDown,
+  KeyboardDoubleArrowUp,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+  DeleteForever,
+} from "@mui/icons-material";
 import {
   ImageListItem,
   ImageListItemBar,
@@ -11,18 +18,13 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import {
-  ChevronUpIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from "@primer/octicons-react";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
 
 interface AdminImageProps {
   originalDescription: string;
   handleUpdateImageDescription: (id: string, description: string) => void;
-  handleMoveImage: (id: string, down: boolean) => void;
+  handleMoveImage: (id: string, down: boolean, count?: number) => void;
   handleDeleteImage: (id: string) => void;
   id: string;
   imageData: Array<{
@@ -84,6 +86,7 @@ export default class AdminImage extends React.Component<
           <ImageListItemBar
             actionIcon={
               <div>
+                {/* Add description */}
                 <IconButton
                   sx={{
                     color: hasDescription
@@ -92,8 +95,21 @@ export default class AdminImage extends React.Component<
                   }}
                   onClick={this.handleDialogOpen}
                 >
-                  <Notes />
+                  <Comment />
                 </IconButton>
+
+                {/* Jump up */}
+                <IconButton
+                  sx={{
+                    color: "rgba(255, 255, 255, 0.54)",
+                  }}
+                  disabled={order === 0}
+                  onClick={() => handleMoveImage(id, false, 3)}
+                >
+                  <KeyboardDoubleArrowUp />
+                </IconButton>
+
+                {/* Move up */}
                 <IconButton
                   sx={{
                     color: "rgba(255, 255, 255, 0.54)",
@@ -101,15 +117,28 @@ export default class AdminImage extends React.Component<
                   disabled={order === 0}
                   onClick={() => handleMoveImage(id, false)}
                 >
-                  <ChevronUpIcon />
+                  <KeyboardArrowUp />
                 </IconButton>
+
+                {/* Move down */}
                 <IconButton
                   sx={{ color: "rgba(255, 255, 255, 0.54)" }}
                   disabled={order === imageData.length - 1}
                   onClick={() => handleMoveImage(id, true)}
                 >
-                  <ChevronDownIcon />
+                  <KeyboardArrowDown />
                 </IconButton>
+
+                {/* Jump down */}
+                <IconButton
+                  sx={{ color: "rgba(255, 255, 255, 0.54)" }}
+                  disabled={order === imageData.length - 1}
+                  onClick={() => handleMoveImage(id, true, 3)}
+                >
+                  <KeyboardDoubleArrowDown />
+                </IconButton>
+
+                {/* Delete */}
                 <IconButton
                   sx={{
                     color: isDeleted
@@ -118,7 +147,7 @@ export default class AdminImage extends React.Component<
                   }}
                   onClick={() => handleDeleteImage(id)}
                 >
-                  <TrashIcon />
+                  <DeleteForever />
                 </IconButton>
               </div>
             }
