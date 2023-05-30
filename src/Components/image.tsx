@@ -88,7 +88,7 @@ export default class PortfolioImage extends React.Component<
           />
           {isMobile && hasDescription && !isMobileModalOpen ? (
             <div
-              style={{ position: "absolute", bottom: 10, right: 15 }}
+              style={{ position: "absolute", bottom: 15, right: 15 }}
               onClick={() =>
                 isMobile
                   ? hasDescription
@@ -97,7 +97,9 @@ export default class PortfolioImage extends React.Component<
                   : this.openDesktopModal()
               }
             >
-              <Comment />
+              <IconButton size="small">
+                <Comment sx={{ color: "#FFFFFFAA" }} />
+              </IconButton>
             </div>
           ) : null}
         </ImageListItem>
