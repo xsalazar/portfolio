@@ -84,7 +84,7 @@ export default class PortfolioImage extends React.Component<
             src={`https://backend.xsalazar.com/images/${originalImageId}`} // We always want this to be the original image
             style={{ objectFit: "cover" }}
             height={256}
-            alt="description"
+            alt={description}
           />
           {isMobile && hasDescription && !isMobileModalOpen ? (
             <div
@@ -142,7 +142,7 @@ export default class PortfolioImage extends React.Component<
                 <img
                   width="100%"
                   src={`https://backend.xsalazar.com/images/${imageId}`}
-                  alt="description"
+                  alt={description}
                   style={{ verticalAlign: "middle" }}
                 />
                 <Typography variant="caption">{description}</Typography>

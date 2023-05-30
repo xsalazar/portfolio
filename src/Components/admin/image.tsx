@@ -81,7 +81,7 @@ export default class AdminImage extends React.Component<
             src={`https://backend.xsalazar.com/images/${id}`}
             style={{ objectFit: "cover", opacity: isDeleted ? 0.6 : 1 }}
             height={256}
-            alt="description"
+            alt={description}
           />
           <ImageListItemBar
             actionIcon={
