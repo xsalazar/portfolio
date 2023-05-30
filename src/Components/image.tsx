@@ -9,7 +9,7 @@ import {
   Backdrop,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, CommentTwoTone } from "@mui/icons-material";
 
 interface PortfolioImageProps {
   imageData: Array<{ id: string; order: number; description: string }>;
@@ -86,6 +86,20 @@ export default class PortfolioImage extends React.Component<
             height={256}
             alt="description"
           />
+          {isMobile && hasDescription && !isMobileModalOpen ? (
+            <div
+              style={{ position: "absolute", bottom: 15, right: 15 }}
+              onClick={() =>
+                isMobile
+                  ? hasDescription
+                    ? this.openMobileModal()
+                    : null
+                  : this.openDesktopModal()
+              }
+            >
+              <CommentTwoTone color="action" />
+            </div>
+          ) : null}
         </ImageListItem>
 
         {/* Desktop Modal */}
