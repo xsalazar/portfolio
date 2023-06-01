@@ -85,6 +85,7 @@ export default class PortfolioImage extends React.Component<
             src={`https://backend.xsalazar.com/images/${originalImageId}`} // We always want this to be the original image
             style={{ objectFit: "cover" }}
             height={256}
+            width={256}
             alt={description}
           />
           {isMobile && hasDescription && !isMobileModalOpen ? (
