@@ -224,7 +224,15 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
         ).data;
 
         this.setState({
-          imageData: result.data,
+          imageData: result.data.map(
+            (x: { id: string; order: number; description: string }) => {
+              return {
+                ...x,
+                isDeleted: false,
+                description: x.description ?? "",
+              };
+            }
+          ),
         });
       }
 
