@@ -75,7 +75,7 @@ export default class AdminImage extends React.Component<
 
     return (
       <div>
-        <ImageListItem key={uuidv4()} sx={{ aspectRatio: "1" }}>
+        <ImageListItem key={uuidv4()} sx={{ aspectRatio: "1", minHeight: 256 }}>
           <img
             loading="lazy"
             src={`https://backend.xsalazar.com/images/${id}`}
