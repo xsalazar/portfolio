@@ -1,6 +1,8 @@
-# 💡 Project Template
+# 📸 Photography Portfolio
 
-💡 Template repository used to bootstrap Tyepscript React projects with GitHub Actions CI/CD and VSCode devcontainer support.
+This repository contains the source code for the website [https://portfolio.xsalazar.com](https://portfolio.xsalazar.com) and was bootstrapped using [`create-react-app`](https://github.com/facebook/create-react-app).
+
+This website showcases my personal photography, with admin controls and responsive web and mobile design.
 
 ## Getting Started
 
