@@ -74,7 +74,6 @@ export default class PortfolioImage extends React.Component<
             <Typography variant="caption">{description}</Typography>
           </Backdrop>
           <img
-            loading="lazy"
             onClick={() =>
               isMobile
                 ? hasDescription
