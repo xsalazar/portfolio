@@ -59,7 +59,7 @@ export default class PortfolioImage extends React.Component<
       <div>
         <ImageListItem
           key={uuidv4()}
-          sx={{ aspectRatio: "1", p: 1, position: "relative", minHeight: 256 }}
+          sx={{ aspectRatio: "1", p: 1, position: "relative", height: 256 }}
         >
           <Backdrop
             sx={{

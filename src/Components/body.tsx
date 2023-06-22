@@ -51,10 +51,10 @@ export default class Body extends React.Component<
           overflowY: "scroll",
         }}
       >
-        <Typography variant="h3" sx={{ marginRight: "auto" }}>
+        <Typography variant="h3" sx={{ marginRight: "auto", pl: 1 }}>
           Xavier Salazar
         </Typography>
-        <Typography variant="caption" sx={{ marginRight: "auto" }}>
+        <Typography variant="caption" sx={{ marginRight: "auto", pl: 1 }}>
           Digital and film photography
         </Typography>
         <Box
