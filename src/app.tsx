@@ -3,7 +3,14 @@ import Body from "./Components/body";
 
 function App() {
   return (
-    <div>
+    <div
+      style={{
+        minHeight: "100dvh",
+        maxHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Body />
       <Footer />
     </div>

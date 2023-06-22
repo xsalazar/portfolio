@@ -39,57 +39,57 @@ export default class Body extends React.Component<
     const { imageData } = this.state;
 
     return (
-      <div style={{ height: "calc(100vh - 200px)" }}>
-        <Container
-          maxWidth="md"
+      <Container
+        maxWidth="md"
+        sx={{
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: "1",
+          justifyContent: "center",
+          mt: 1,
+          overflowY: "scroll",
+        }}
+      >
+        <Typography variant="h3" sx={{ marginRight: "auto" }}>
+          Xavier Salazar
+        </Typography>
+        <Typography variant="caption" sx={{ marginRight: "auto" }}>
+          Digital and film photography
+        </Typography>
+        <Box
           sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            height: "100%",
+            mt: 2,
+            flexGrow: "1",
+            overflowY: "scroll",
+            justifyItems: "center",
           }}
         >
-          <Typography variant="h3" sx={{ marginRight: "auto" }}>
-            Xavier Salazar
-          </Typography>
-          <Typography variant="caption" sx={{ marginRight: "auto" }}>
-            Digital and film photography
-          </Typography>
           <Box
             sx={{
-              mt: 2,
-              height: "calc(100vh - 250px)",
-              overflowY: "auto",
-              justifyItems: "center",
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(1, 1fr)",
+                sm: "repeat(3, 1fr)",
+              },
+              [`& .${imageListItemClasses.root}`]: {
+                display: "flex",
+              },
             }}
           >
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(3, 1fr)",
-                },
-                [`& .${imageListItemClasses.root}`]: {
-                  display: "flex",
-                },
-              }}
-            >
-              {imageData.map(({ id, description }) => {
-                return (
-                  <PortfolioImage
-                    originalImageId={id}
-                    originalDescription={description}
-                    imageData={imageData}
-                    key={uuidv4()}
-                  />
-                );
-              })}
-            </Box>
+            {imageData.map(({ id, description }) => {
+              return (
+                <PortfolioImage
+                  originalImageId={id}
+                  originalDescription={description}
+                  imageData={imageData}
+                  key={uuidv4()}
+                />
+              );
+            })}
           </Box>
-        </Container>
-      </div>
+        </Box>
+      </Container>
     );
   }
 }
