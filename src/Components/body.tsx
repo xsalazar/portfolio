@@ -48,7 +48,7 @@ export default class Body extends React.Component<
           flexGrow: "1",
           justifyContent: "center",
           mt: 1,
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
       >
         <Typography variant="h3" sx={{ marginRight: "auto", pl: 1 }}>
