@@ -3,36 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "/",
-  "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.3",
-    "@mui/lab": "^5.0.0-alpha.141",
-    "@mui/material": "^5.14.5",
-    "@primer/octicons-react": "^19.6.0",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "axios": "^1.4.0",
-    "eslint-config-react-app": "^7.0.1",
-    "mui-image": "^1.0.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "uuid": "^9.0.0"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite"
   },
   "browserslist": {
     "production": [
@@ -46,8 +20,33 @@
       "last 1 safari version"
     ]
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "devDependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/lab": "^5.0.0-alpha.142",
+    "@mui/material": "^5.14.7",
+    "@primer/octicons-react": "^19.6.0",
     "@types/mui-image": "^1.0.1",
-    "@types/uuid": "^9.0.2"
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^9.0.2",
+    "@vitejs/plugin-react": "^4.0.4",
+    "axios": "^1.5.0",
+    "eslint-config-react-app": "^7.0.1",
+    "mui-image": "^1.0.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.0",
+    "vite": "^4.4.9",
+    "vite-tsconfig-paths": "^4.2.0"
   }
 }
