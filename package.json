@@ -34,7 +34,7 @@
     "@mui/material": "^5.14.9",
     "@primer/octicons-react": "^19.7.0",
     "@types/mui-image": "^1.0.1",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.4",
     "@vitejs/plugin-react": "^4.0.4",
