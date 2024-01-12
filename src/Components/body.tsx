@@ -48,20 +48,27 @@ export default class Body extends React.Component<
           flexGrow: "1",
           justifyContent: "center",
           mt: 1,
-          overflowY: "auto",
         }}
       >
-        <Typography variant="h3" sx={{ marginRight: "auto", pl: 1 }}>
-          Xavier Salazar
-        </Typography>
-        <Typography variant="caption" sx={{ marginRight: "auto", pl: 1 }}>
-          Digital and film photography
-        </Typography>
+        <Container
+        sx={{
+          marginRight: "auto",
+          py: "1em",
+          position: "sticky",
+          top: 0,
+          background: "white",
+        }}>
+          <Typography variant="h3">
+            Xavier Salazar
+          </Typography>
+          <Typography variant="caption">
+            Digital and film photography
+          </Typography>
+        </Container>
         <Box
           sx={{
             mt: 2,
             flexGrow: "1",
-            overflowY: "scroll",
             justifyItems: "center",
           }}
         >
