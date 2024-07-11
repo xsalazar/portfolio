@@ -27,7 +27,7 @@
     "@mui/icons-material": "^5.16.0",
     "@mui/lab": "^5.0.0-alpha.172",
     "@mui/material": "^5.16.0",
-    "@primer/octicons-react": "^19.10.0",
+    "@primer/octicons-react": "^19.11.0",
     "@types/mui-image": "^1.0.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
