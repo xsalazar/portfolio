@@ -1,216 +1,70 @@
-import {
-  Container,
-  IconButton,
-  ImageList,
-  Input,
-  InputAdornment,
-  InputLabel,
-  Snackbar,
-} from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import React from "react";
-import { UploadIcon } from "@primer/octicons-react";
-import { Stack } from "@mui/system";
 import { Close, Save, Visibility, VisibilityOff } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import ImageList from "@mui/material/ImageList";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import Snackbar from "@mui/material/Snackbar";
+import { Stack } from "@mui/system";
+import { UploadIcon } from "@primer/octicons-react";
+import axios from "axios";
+import React, { useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import AdminImage from "./image";
 
-interface AdminProps {}
+export default function Admin() {
+  const [apiKey, setApiKey] = useState("");
+  const [hasError, setHasError] = useState(false);
+  const [imageData, setImageData] = useState<
+    Array<{
+      description: string;
+      id: string;
+      isDeleted: boolean;
+      order: number;
+    }>
+  >([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
 
-interface AdminState {
-  apiKey: string;
-  hasError: boolean;
-  imageData: Array<{
-    description: string;
-    id: string;
-    isDeleted: boolean;
-    order: number;
-  }>;
-  isSaving: boolean;
-  isUploading: boolean;
-  showApiKey: boolean;
-}
-
-export default class Admin extends React.Component<AdminProps, AdminState> {
-  constructor(props: AdminProps) {
-    super(props);
-
-    this.state = {
-      apiKey: "",
-      hasError: false,
-      imageData: [],
-      isSaving: false,
-      isUploading: false,
-      showApiKey: false,
-    };
-
-    this.handleApiKeyInput = this.handleApiKeyInput.bind(this);
-    this.handleShowApiKey = this.handleShowApiKey.bind(this);
-    this.handleUpdateImageDescription =
-      this.handleUpdateImageDescription.bind(this);
-    this.handleMoveImage = this.handleMoveImage.bind(this);
-    this.handleDeleteImage = this.handleDeleteImage.bind(this);
-    this.handleUploadImage = this.handleUploadImage.bind(this);
-    this.handleSaveImageData = this.handleSaveImageData.bind(this);
-    this.handleErrorClose = this.handleErrorClose.bind(this);
-  }
-
-  async componentDidMount(): Promise<void> {
+  const fetchData = useCallback(async () => {
     const result = (
       await axios.get(`https://backend.xsalazar.com/`, {
         params: { allImages: true },
       })
     ).data;
 
-    this.setState({
-      imageData: result.data.map(
+    setImageData(
+      result.data.map(
         (x: { id: string; order: number; description: string }) => {
           return { ...x, isDeleted: false, description: x.description ?? "" };
         }
-      ),
-    });
-  }
-
-  render() {
-    const { apiKey, hasError, imageData, isSaving, isUploading, showApiKey } =
-      this.state;
-    const hasApiKey = apiKey !== "";
-
-    return (
-      <div style={{ height: "calc(100vh - 200px)" }}>
-        <Container
-          maxWidth="md"
-          sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          {/* Top-level admin controls */}
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={2}
-            width="100%"
-          >
-            {/* API Key */}
-            <InputLabel>API Key</InputLabel>
-            <Input
-              size="small"
-              sx={{ flex: 1 }}
-              type={showApiKey ? "text" : "password"}
-              onChange={this.handleApiKeyInput}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={this.handleShowApiKey}>
-                    {showApiKey ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-
-            {/* Upload Button */}
-            <label htmlFor="contained-button-upload">
-              <input
-                accept="image/*"
-                hidden
-                multiple
-                id="contained-button-upload"
-                onChange={this.handleUploadImage}
-                type="file"
-              />
-              <LoadingButton
-                color="secondary"
-                component="span"
-                disabled={!hasApiKey}
-                loading={isUploading}
-                loadingPosition="start"
-                startIcon={<UploadIcon />}
-                variant="contained"
-              >
-                Upload Image
-              </LoadingButton>
-            </label>
-
-            {/* Save Button */}
-            <LoadingButton
-              disabled={!hasApiKey}
-              startIcon={<Save />}
-              loading={isSaving}
-              loadingPosition="start"
-              onClick={this.handleSaveImageData}
-              variant="contained"
-            >
-              Save Changes
-            </LoadingButton>
-          </Stack>
-
-          {/* Images */}
-          <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
-            {imageData.map(({ description, id, isDeleted, order }) => {
-              return (
-                <AdminImage
-                  originalDescription={description}
-                  handleDeleteImage={this.handleDeleteImage}
-                  handleMoveImage={this.handleMoveImage}
-                  handleUpdateImageDescription={
-                    this.handleUpdateImageDescription
-                  }
-                  key={uuidv4()}
-                  id={id}
-                  imageData={imageData}
-                  isDeleted={isDeleted}
-                  order={order}
-                />
-              );
-            })}
-          </ImageList>
-        </Container>
-
-        {/* Error Toast */}
-        <Snackbar
-          action={
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={this.handleErrorClose}
-            >
-              <Close fontSize="small" />
-            </IconButton>
-          }
-          open={hasError}
-          onClose={this.handleErrorClose}
-          autoHideDuration={4000}
-          message="🙈 Uh oh, something went wrong -- sorry! Try again soon"
-        />
-      </div>
+      )
     );
-  }
+  }, []);
 
-  handleApiKeyInput(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ apiKey: e.target.value });
-  }
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  handleShowApiKey() {
-    const { showApiKey } = this.state;
-    this.setState({ showApiKey: !showApiKey });
-  }
+  const handleApiKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setApiKey(e.target.value);
+  };
 
-  async handleUploadImage(event: React.FormEvent<HTMLInputElement>) {
-    const { apiKey } = this.state;
+  const handleShowApiKey = () => {
+    setShowApiKey(!showApiKey);
+  };
 
+  const handleUploadImage = async (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
     if (event.currentTarget.files === null || apiKey === "") {
       return;
     }
 
-    this.setState({
-      isUploading: true,
-    });
+    setIsUploading(true);
 
     const files = event.currentTarget.files;
 
@@ -223,8 +77,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
           })
         ).data;
 
-        this.setState({
-          imageData: result.data.map(
+        setImageData(
+          result.data.map(
             (x: { id: string; order: number; description: string }) => {
               return {
                 ...x,
@@ -232,25 +86,19 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
                 description: x.description ?? "",
               };
             }
-          ),
-        });
+          )
+        );
       }
 
-      this.setState({
-        isUploading: false,
-      });
+      setIsUploading(false);
     } catch (e) {
-      this.setState({
-        hasError: true,
-        isUploading: false,
-      });
+      setHasError(true);
+      setIsUploading(false);
     }
-  }
+  };
 
-  async handleSaveImageData() {
-    const { apiKey, imageData } = this.state;
-
-    this.setState({ isSaving: true });
+  const handleSaveImageData = async () => {
+    setIsSaving(true);
 
     try {
       const res = (
@@ -267,27 +115,28 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
         )
       ).data;
 
-      this.setState({ isSaving: false, imageData: res.data });
+      setIsSaving(false);
+      setImageData(res.data);
     } catch (e) {
-      this.setState({ hasError: true, isSaving: false });
+      setIsSaving(false);
+      setHasError(true);
     }
-  }
+  };
 
-  handleUpdateImageDescription(needleId: string, description: string) {
-    let { imageData } = this.state;
-
+  const handleUpdateImageDescription = (
+    needleId: string,
+    description: string
+  ) => {
     const imagePosition = imageData.findIndex(
       ({ id: haystackId }) => needleId === haystackId
     );
 
     imageData[imagePosition].description = description;
 
-    this.setState({ imageData: imageData });
-  }
+    setImageData(imageData);
+  };
 
-  handleMoveImage(needleId: string, down: boolean, count?: number) {
-    let { imageData } = this.state;
-
+  const handleMoveImage = (needleId: string, down: boolean, count?: number) => {
     const jump = count ?? 1;
 
     const oldPosition = imageData.findIndex(
@@ -303,12 +152,10 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     imageData.splice(newPosition, 0, originalData);
 
     // Normalize order and save state
-    this.setState({ imageData: this.normalizeImageOrder(imageData) });
-  }
+    setImageData(normalizeImageOrder(imageData));
+  };
 
-  handleDeleteImage(needleId: string) {
-    let { imageData } = this.state;
-
+  const handleDeleteImage = (needleId: string) => {
     const position = imageData.findIndex(
       ({ id: haystackId }) => needleId === haystackId
     );
@@ -316,28 +163,140 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     // Toggle deleted state
     imageData[position].isDeleted = !imageData[position].isDeleted;
 
-    this.setState({ imageData: this.normalizeImageOrder(imageData) });
-  }
+    setImageData(normalizeImageOrder(imageData));
+  };
 
   // Handler for closing error toast
-  handleErrorClose() {
-    this.setState({
-      hasError: false,
-    });
-  }
+  const handleErrorClose = () => {
+    setHasError(false);
+  };
 
-  private normalizeImageOrder(
+  const normalizeImageOrder = (
     data: Array<{
       description: string;
       id: string;
       isDeleted: boolean;
       order: number;
     }>
-  ) {
+  ) => {
     for (var i = 0; i < data.length; i++) {
       data[i].order = i;
     }
 
     return data;
-  }
+  };
+
+  const hasApiKey = apiKey !== "";
+
+  return (
+    <div style={{ height: "calc(100vh - 200px)" }}>
+      <Container
+        maxWidth="md"
+        sx={{
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        {/* Top-level admin controls */}
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center"
+          spacing={2}
+          width="100%"
+        >
+          {/* API Key */}
+          <InputLabel>API Key</InputLabel>
+          <Input
+            size="small"
+            sx={{ flex: 1 }}
+            type={showApiKey ? "text" : "password"}
+            onChange={handleApiKeyInput}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton onClick={handleShowApiKey}>
+                  {showApiKey ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+
+          {/* Upload Button */}
+          <label htmlFor="contained-button-upload">
+            <input
+              accept="image/*"
+              hidden
+              multiple
+              id="contained-button-upload"
+              onChange={handleUploadImage}
+              type="file"
+            />
+            <LoadingButton
+              color="secondary"
+              component="span"
+              disabled={!hasApiKey}
+              loading={isUploading}
+              loadingPosition="start"
+              startIcon={<UploadIcon />}
+              variant="contained"
+            >
+              Upload Image
+            </LoadingButton>
+          </label>
+
+          {/* Save Button */}
+          <LoadingButton
+            disabled={!hasApiKey}
+            startIcon={<Save />}
+            loading={isSaving}
+            loadingPosition="start"
+            onClick={handleSaveImageData}
+            variant="contained"
+          >
+            Save Changes
+          </LoadingButton>
+        </Stack>
+
+        {/* Images */}
+        <ImageList cols={3} gap={16} sx={{ height: "100%", width: "100%" }}>
+          {imageData.map(({ description, id, isDeleted, order }) => {
+            return (
+              <AdminImage
+                originalDescription={description}
+                handleDeleteImage={handleDeleteImage}
+                handleMoveImage={handleMoveImage}
+                handleUpdateImageDescription={handleUpdateImageDescription}
+                key={uuidv4()}
+                id={id}
+                imageData={imageData}
+                isDeleted={isDeleted}
+                order={order}
+              />
+            );
+          })}
+        </ImageList>
+      </Container>
+
+      {/* Error Toast */}
+      <Snackbar
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleErrorClose}
+          >
+            <Close fontSize="small" />
+          </IconButton>
+        }
+        open={hasError}
+        onClose={handleErrorClose}
+        autoHideDuration={4000}
+        message="🙈 Uh oh, something went wrong -- sorry! Try again soon"
+      />
+    </div>
+  );
 }
