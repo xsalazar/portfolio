@@ -27,7 +27,7 @@
     "@mui/icons-material": "^7.3.7",
     "@mui/lab": "^7.0.0",
     "@mui/material": "^7.3.7",
-    "@primer/octicons-react": "^19.21.2",
+    "@primer/octicons-react": "^19.22.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
