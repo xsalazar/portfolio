@@ -1,5 +1,5 @@
 import { Close, Save, Visibility, VisibilityOff } from "@mui/icons-material";
-import LoadingButton from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import ImageList from "@mui/material/ImageList";
@@ -7,12 +7,12 @@ import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import Snackbar from "@mui/material/Snackbar";
-import { Stack } from "@mui/system";
+import Stack from "@mui/material/Stack";
 import { UploadIcon } from "@primer/octicons-react";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import AdminImage from "./image";
+import AdminImage from "./image.js";
 
 export default function Admin() {
   const [apiKey, setApiKey] = useState("");
@@ -234,7 +234,7 @@ export default function Admin() {
               onChange={handleUploadImage}
               type="file"
             />
-            <LoadingButton
+            <Button
               color="secondary"
               component="span"
               disabled={!hasApiKey}
@@ -244,11 +244,11 @@ export default function Admin() {
               variant="contained"
             >
               Upload Image
-            </LoadingButton>
+            </Button>
           </label>
 
           {/* Save Button */}
-          <LoadingButton
+          <Button
             disabled={!hasApiKey}
             startIcon={<Save />}
             loading={isSaving}
@@ -257,7 +257,7 @@ export default function Admin() {
             variant="contained"
           >
             Save Changes
-          </LoadingButton>
+          </Button>
         </Stack>
 
         {/* Images */}

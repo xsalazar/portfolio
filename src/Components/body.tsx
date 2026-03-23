@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import PortfolioImage from "./image";
+import PortfolioImage from "./image.js";
 
 export default function Body() {
   const [imageData, setImageData] = useState<
