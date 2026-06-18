@@ -203,11 +203,12 @@ export default function Admin() {
         {/* Top-level admin controls */}
         <Stack
           direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
           spacing={2}
-          width="100%"
-        >
+          sx={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "100%"
+          }}>
           {/* API Key */}
           <InputLabel>API Key</InputLabel>
           <Input
@@ -279,7 +280,6 @@ export default function Admin() {
           })}
         </ImageList>
       </Container>
-
       {/* Error Toast */}
       <Snackbar
         action={

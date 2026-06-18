@@ -135,7 +135,6 @@ export default function PortfolioImage({
           </div>
         ) : null}
       </ImageListItem>
-
       {/* Desktop Modal */}
       <Modal
         open={isDesktopModalOpen}
@@ -155,10 +154,11 @@ export default function PortfolioImage({
         >
           <Stack
             direction="row"
-            justifyContent="center"
-            alignItems="center"
             spacing={2}
-          >
+            sx={{
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
             {/* Back button */}
             <IconButton
               onClick={() => handleMove(imageId, false)}
@@ -169,10 +169,11 @@ export default function PortfolioImage({
             {/* Image and description */}
             <Stack
               direction="column"
-              justifyContent="center"
-              alignContent="center"
               spacing={2}
-            >
+              sx={{
+                justifyContent: "center",
+                alignContent: "center"
+              }}>
               <img
                 width="100%"
                 src={`https://backend.xsalazar.com/images/${imageId}`}
