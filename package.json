@@ -21,7 +21,7 @@
     "axios": "~1.18.1",
     "react": "~19.2.4",
     "react-dom": "~19.2.7",
-    "react-router-dom": "~7.18.0",
+    "react-router-dom": "~7.18.1",
     "uuid": "~14.0.1",
     "vite": "~8.1.0"
   }
